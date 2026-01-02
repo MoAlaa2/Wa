@@ -117,7 +117,7 @@ const login = async (email: string): Promise<boolean> => {
       setUser(savedUser);
       localStorage.setItem(
         'guthmi_user',
-        JSON.stringify({ token: 'dev-token-123', user: savedUser })
+        localStorage.setItem('guthmi_user', JSON.stringify(savedUser));
       );
     }
   };
