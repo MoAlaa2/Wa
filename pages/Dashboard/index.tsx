@@ -108,9 +108,11 @@ const Dashboard = () => {
                     {protectionConfig.warmUpMode && <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded uppercase">Warm-Up Mode</span>}
                   </h3>
                   <div className="text-sm text-gray-600 flex gap-4 mt-1">
-                    <span className="flex items-center gap-1"><Activity size={14}/> Queue: {queueStats.pending}</span>
-                    <span className="flex items-center gap-1"><Zap size={14}/> Rate: {queueStats.currentRate.toFixed(1)}/sec</span>
-                    {queueStats.pending > 0 && <span>Est. Time: {queueStats.estimatedCompletion}</span>}
+                    <span className="flex items-center gap-1"><Activity size={14}/> Queue: {queueStats?.pending ?? 0}</span>
+                    <span className="flex items-center gap-1"><Zap size={14}/> Rate: {(queueStats?.currentRate ?? 0).toFixed(1)}/sec</span>
+                    {(queueStats?.pending ?? 0) > 0 && (
+  <span>Est. Time: {queueStats?.estimatedCompletion}</span>
+)}
                   </div>
                 </div>
               </div>
