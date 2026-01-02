@@ -21,7 +21,14 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
   const fetchNotifications = async () => {
     try {
       const data = await whatsappService.getInternalNotifications();
-      setNotifications(data);
+
+const safeNotifications = Array.isArray(data)
+  ? data
+  : Array.isArray(data?.internalNotifications)
+  ? data.internalNotifications
+  : [];
+
+setNotifications(safeNotifications);
     } catch (error) {
       console.error("Failed to fetch notifications", error);
     } finally {
