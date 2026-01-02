@@ -113,7 +113,7 @@ export const whatsappService = {
   try {
     console.log(`Attempting login to /login for ${email}`);
 
-    const response = await api.post('/login', { email });
+    const response = await api.post('/auth/login', { email });
 
     console.log('Login success', response.data);
     return response.data;
