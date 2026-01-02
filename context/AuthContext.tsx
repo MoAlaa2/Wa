@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          setUser(parsed.user);
+          setUser(parsed);
 
           // load team (optional – fake now)
           const teamData = await whatsappService.getUsers();
@@ -59,24 +59,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   /* ======================
      Login
   ====================== */
-  const login = async (email: string): Promise<boolean> => {
-    try {
-      const data = await whatsappService.login(email);
+const login = async (email: string): Promise<boolean> => {
+  try {
+    const data = await whatsappService.login(email);
 
-      if (!data) return false;
+    if (!data) return false;
 
-      setUser(data.user);
-      localStorage.setItem('guthmi_user', JSON.stringify(data));
+    setUser(data); // ✅ الصح
+    localStorage.setItem('guthmi_user', JSON.stringify(data));
 
-      const teamData = await whatsappService.getUsers();
-      setUsers(teamData);
+    const teamData = await whatsappService.getUsers();
+    setUsers(teamData);
 
-      return true;
-    } catch (e) {
-      console.error('Login failed', e);
-      return false;
-    }
-  };
+    return true;
+  } catch (e) {
+    console.error('Login failed', e);
+    return false;
+  }
+};
 
   /* ======================
      Logout
