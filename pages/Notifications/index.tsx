@@ -23,12 +23,22 @@ const NotificationsPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const fetchCampaigns = async (silent = false) => {
-    if (!silent) setLoading(true);
-    const data = await whatsappService.getCampaigns();
-    setCampaigns(data);
-    if (!silent) setLoading(false);
-  };
+const fetchCampaigns = async (silent = false) => {
+  if (!silent) setLoading(true);
+
+  const data = await whatsappService.getCampaigns();
+
+  // 🔥 الحماية المهمة
+  const campaignsArray = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.campaigns)
+    ? data.campaigns
+    : [];
+
+  setCampaigns(campaignsArray);
+
+  if (!silent) setLoading(false);
+};
 
   const handleToggleStatus = async (id: string) => {
     await whatsappService.toggleCampaignStatus(id);
