@@ -129,12 +129,12 @@ const Dashboard = () => {
           {/* KPI CARDS */}
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard 
-              title={t.dashboard.stats.totalMessages} 
-              value={summary.totalMessages.toLocaleString()} 
-              icon={MessageSquare} 
-              color="blue"
-              trend={summary.trends.messages}
-              link="/analytics/messaging"
+            title={t.dashboard.stats.totalMessages} 
+            value={(summary?.totalMessages ?? 0).toLocaleString()} 
+            icon={MessageSquare} 
+            color="blue"
+            trend={summary?.trends?.messages ?? 0}
+            link="/analytics/messaging"
             />
             <StatCard 
               title={t.dashboard.stats.readRate} 
