@@ -4,14 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Guthmi WA - Enterprise Platform</title>
+
+    <!-- TEMP Tailwind (dev only) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              primary: '#16a34a', // Guthmi Green
-              secondary: '#15803d', // Darker Green
+              primary: '#16a34a',
+              secondary: '#15803d',
               dark: '#14532d',
               surface: '#F0F2F5',
             }
@@ -19,23 +21,12 @@
         }
       }
     </script>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "axios": "https://esm.sh/axios@^1.13.2",
-    "express": "https://esm.sh/express@^5.2.1",
-    "dotenv": "https://esm.sh/dotenv@^17.2.3",
-    "cors": "https://esm.sh/cors@^2.8.5"
-  }
-}
-</script>
-</head>
+  </head>
+
   <body>
     <div id="root"></div>
+
+    <!-- 🔴 أهم سطر في حياتك -->
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
