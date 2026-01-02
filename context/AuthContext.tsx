@@ -107,20 +107,24 @@ const login = async (email: string): Promise<boolean> => {
     setUsers((prev) => [...prev, createdUser]);
   };
 
-  const updateUser = async (updatedUser: User) => {
-    const savedUser = await whatsappService.saveUser(updatedUser);
-    setUsers((prev) =>
-      prev.map((u) => (u.id === savedUser.id ? savedUser : u))
-    );
+ const updateUser = async (updatedUser: User) => {
+  const savedUser = await whatsappService.saveUser(updatedUser);
 
-    if (user?.id === savedUser.id) {
-      setUser(savedUser);
-      localStorage.setItem(
-        'guthmi_user',
-        localStorage.setItem('guthmi_user', JSON.stringify(savedUser));
-      );
-    }
-  };
+  setUsers((prev) =>
+    prev.map((u) => (u.id === savedUser.id ? savedUser : u))
+  );
+
+  if (user?.id === savedUser.id) {
+    setUser(savedUser);
+    localStorage.setItem(
+      'guthmi_user',
+      JSON.stringify({
+        token: 'dev-token-123',
+        user: savedUser,
+      })
+    );
+  }
+};
 
   const deleteUser = async (id: string) => {
     await whatsappService.deleteUser(id);
