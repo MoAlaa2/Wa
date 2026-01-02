@@ -1,11 +1,16 @@
-
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
 import { User, Permission } from '../types';
 import { whatsappService } from '../services/whatsappService';
 
 interface AuthContextType {
   user: User | null;
-  users: User[]; 
+  users: User[];
   login: (email: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
@@ -17,90 +22,127 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Restore session and fetch team
+  /* ======================
+     Restore Session
+  ====================== */
   useEffect(() => {
     const initAuth = async () => {
-      const savedUser = localStorage.getItem('guthmi_user');
-      if (savedUser) {
-        setUser(JSON.parse(savedUser));
-      }
-      
-      // If logged in, fetch team members
-      if (savedUser) {
+      const saved = localStorage.getItem('guthmi_user');
+
+      if (saved) {
         try {
+          const parsed = JSON.parse(saved);
+          setUser(parsed.user);
+
+          // load team (optional – fake now)
           const teamData = await whatsappService.getUsers();
           setUsers(teamData);
         } catch (e) {
-          console.error("Failed to load team data", e);
+          console.error('Failed to restore auth session', e);
+          localStorage.removeItem('guthmi_user');
         }
       }
+
       setLoading(false);
     };
+
     initAuth();
   }, []);
 
+  /* ======================
+     Login
+  ====================== */
   const login = async (email: string): Promise<boolean> => {
     try {
-      const foundUser = await whatsappService.login(email);
-      if (foundUser) {
-        setUser(foundUser);
-        localStorage.setItem('guthmi_user', JSON.stringify(foundUser));
-        
-        // Load team after login
-        const teamData = await whatsappService.getUsers();
-        setUsers(teamData);
-        return true;
-      }
-      return false;
+      const data = await whatsappService.login(email);
+
+      if (!data) return false;
+
+      setUser(data.user);
+      localStorage.setItem('guthmi_user', JSON.stringify(data));
+
+      const teamData = await whatsappService.getUsers();
+      setUsers(teamData);
+
+      return true;
     } catch (e) {
-      console.error("Login failed", e);
+      console.error('Login failed', e);
       return false;
     }
   };
 
+  /* ======================
+     Logout
+  ====================== */
   const logout = () => {
     setUser(null);
+    setUsers([]);
     localStorage.removeItem('guthmi_user');
   };
 
+  /* ======================
+     Permissions
+  ====================== */
   const hasPermission = (permission: Permission): boolean => {
-    if (!user) return false;
-    return user.permissions?.includes(permission) || false;
+    if (!user || !user.permissions) return false;
+
+    // 👑 SUPER ADMIN
+    if (user.permissions.includes('*')) return true;
+
+    return user.permissions.includes(permission);
   };
 
-  // --- Team Management (Live) ---
+  /* ======================
+     Team Management (Mock)
+  ====================== */
   const addUser = async (newUser: Partial<User>) => {
     const createdUser = await whatsappService.saveUser(newUser);
-    setUsers([...users, createdUser]);
+    setUsers((prev) => [...prev, createdUser]);
   };
 
   const updateUser = async (updatedUser: User) => {
     const savedUser = await whatsappService.saveUser(updatedUser);
-    setUsers(users.map(u => u.id === savedUser.id ? savedUser : u));
-    // Update current session if self-edit
+    setUsers((prev) =>
+      prev.map((u) => (u.id === savedUser.id ? savedUser : u))
+    );
+
     if (user?.id === savedUser.id) {
-       setUser(savedUser);
-       localStorage.setItem('guthmi_user', JSON.stringify(savedUser));
+      setUser(savedUser);
+      localStorage.setItem(
+        'guthmi_user',
+        JSON.stringify({ token: 'dev-token-123', user: savedUser })
+      );
     }
   };
 
   const deleteUser = async (id: string) => {
     await whatsappService.deleteUser(id);
-    setUsers(users.filter(u => u.id !== id));
+    setUsers((prev) => prev.filter((u) => u.id !== id));
   };
 
   if (loading) return null;
 
   return (
-    <AuthContext.Provider value={{ 
-      user, users, login, logout, isAuthenticated: !!user, hasPermission,
-      addUser, updateUser, deleteUser
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        users,
+        login,
+        logout,
+        isAuthenticated: !!user,
+        hasPermission,
+        addUser,
+        updateUser,
+        deleteUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
