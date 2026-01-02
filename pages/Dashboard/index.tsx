@@ -137,28 +137,28 @@ const Dashboard = () => {
             link="/analytics/messaging"
             />
             <StatCard 
-              title={t.dashboard.stats.readRate} 
-              value={`${summary.readRate}%`} 
-              icon={CheckCircle} 
-              color="green"
-              trend={summary.trends.read}
-              link="/analytics/messaging"
-            />
+    title={t.dashboard.stats.readRate} 
+    value={`${summary?.readRate ?? 0}%`} 
+    icon={CheckCircle} 
+    color="green"
+    trend={summary?.trends?.read ?? 0}
+    link="/analytics/messaging"
+  />
             <StatCard 
-              title={t.dashboard.stats.totalCost} 
-              value={`$${summary.totalCost.toFixed(2)}`} 
-              icon={DollarSign} 
-              color="yellow"
-              trend={-summary.trends.cost}
-              link="/analytics/notifications" 
-            />
+    title={t.dashboard.stats.totalCost} 
+    value={`$${(summary?.totalCost ?? 0).toFixed(2)}`} 
+    icon={DollarSign} 
+    color="yellow"
+    trend={-(summary?.trends?.cost ?? 0)}
+    link="/analytics/notifications" 
+  />
             <StatCard 
-              title={t.dashboard.stats.failedRate} 
-              value={`${summary.failedRate}%`} 
-              icon={AlertTriangle} 
-              color="red"
-              link="/analytics/messaging"
-            />
+    title={t.dashboard.stats.failedRate} 
+    value={`${summary?.failedRate ?? 0}%`} 
+    icon={AlertTriangle} 
+    color="red"
+    link="/analytics/messaging"
+  />
           </section>
 
           {/* Quick Actions (Replacing detailed charts) */}
