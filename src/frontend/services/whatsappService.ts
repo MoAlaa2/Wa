@@ -165,32 +165,33 @@ export const whatsappService = {
   },
   saveContact: async (c: any) => { await api.post('/contacts', c); },
   deleteContact: async (id: string) => { await api.delete(`/contacts/${id}`); },
+  
+  // Lists - TODO: Backend needs to implement these endpoints
   getContactLists: async () => {
-    try { const { data } = await api.get('/contacts/lists'); return data; } catch { return []; }
+    // Mock data until backend implements /contacts/lists endpoint
+    return [];
   },
   saveContactList: async (l: any) => {
-    if (l.id) {
-      const { data } = await api.put(`/contacts/lists/${l.id}`, l);
-      return data;
-    } else {
-      const { data } = await api.post('/contacts/lists', l);
-      return data;
-    }
+    // TODO: Backend needs POST/PUT /contacts/lists endpoint
+    return l;
   },
-  deleteContactList: async (id: string) => { await api.delete(`/contacts/lists/${id}`); },
+  deleteContactList: async (id: string) => {
+    // TODO: Backend needs DELETE /contacts/lists/:id endpoint
+  },
+  
+  // Tags - TODO: Backend needs to implement these endpoints  
   getContactTags: async () => {
-    try { const { data } = await api.get('/contacts/tags'); return data; } catch { return []; }
+    // Mock data until backend implements /contacts/tags endpoint
+    return [];
   },
   saveContactTag: async (t: any) => {
-    if (t.id) {
-      const { data } = await api.put(`/contacts/tags/${t.id}`, t);
-      return data;
-    } else {
-      const { data } = await api.post('/contacts/tags', t);
-      return data;
-    }
+    // TODO: Backend needs POST/PUT /contacts/tags endpoint
+    return t;
   },
-  deleteContactTag: async (id: string) => { await api.delete(`/contacts/tags/${id}`); },
+  deleteContactTag: async (id: string) => {
+    // TODO: Backend needs DELETE /contacts/tags/:id endpoint
+  },
+  
   importContacts: async (file: any) => ({}) as ImportJob,
   getImportHistory: async () => [],
 
