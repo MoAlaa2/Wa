@@ -28,7 +28,18 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
 
   useEffect(() => {
     if (contact) {
-      setFormData(contact);
+      // Map backend fields to frontend fields
+      setFormData({
+        ...contact,
+        firstName: contact.firstName || contact.name?.split(' ')[0] || '',
+        lastName: contact.lastName || contact.name?.split(' ').slice(1).join(' ') || '',
+        phone: contact.phone || contact.phoneNumber || '',
+        email: contact.email || '',
+        status: contact.status || 'SUBSCRIBED',
+        lists: contact.lists || [],
+        tags: contact.tags || [],
+        customAttributes: contact.customAttributes || {}
+      });
     } else {
       setFormData({
         firstName: '',

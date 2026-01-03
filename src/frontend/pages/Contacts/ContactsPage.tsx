@@ -61,8 +61,22 @@ const ContactsPage = () => {
     }
   };
 
-  const handleSaveContact = async (contact: Partial<Contact>) => {
-    await whatsappService.saveContact(contact);
+  const handleSaveContact = async (contactData: Partial<Contact>) => {
+    // Convert frontend format to backend format
+    const backendData = {
+      id: contactData.id,
+      name: contactData.firstName && contactData.lastName 
+        ? `${contactData.firstName} ${contactData.lastName}`.trim()
+        : contactData.firstName || contactData.name || '',
+      phoneNumber: contactData.phone || contactData.phoneNumber || '',
+      email: contactData.email,
+      company: contactData.company,
+      notes: contactData.notes,
+      tags: contactData.tags || [],
+      status: contactData.status
+    };
+    
+    await whatsappService.saveContact(backendData);
     setIsModalOpen(false);
     fetchData();
   };
