@@ -43,8 +43,8 @@ const QuickRepliesPage = () => {
   };
 
   const filteredReplies = replies.filter(r => 
-    r.shortcut.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    r.content.toLowerCase().includes(searchQuery.toLowerCase())
+    r.shortcut?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    r.content?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (

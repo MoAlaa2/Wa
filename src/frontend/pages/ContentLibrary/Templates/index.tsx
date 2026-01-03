@@ -27,9 +27,15 @@ const TemplatesPage = () => {
 
   const fetchTemplates = async () => {
     setLoading(true);
-    const data = await whatsappService.getTemplates();
-    setTemplates(data);
-    setLoading(false);
+    try {
+      const data = await whatsappService.getTemplates();
+      setTemplates(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Failed to fetch templates", error);
+      setTemplates([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCreateTemplate = async (data: any) => {
@@ -65,7 +71,7 @@ const TemplatesPage = () => {
   };
 
   const filteredTemplates = templates.filter(template => {
-    const matchesSearch = template.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = template.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? true;
     const matchesStatus = statusFilter === 'ALL' || template.status === statusFilter;
     return matchesSearch && matchesStatus;
   });

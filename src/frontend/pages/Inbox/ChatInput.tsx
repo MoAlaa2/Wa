@@ -43,7 +43,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isWindowOpe
     const match = message.match(/\/(\w*)$/);
     if (match) {
       const query = match[1].toLowerCase();
-      const filtered = quickReplies.filter(qr => qr.shortcut.toLowerCase().startsWith(query));
+      const filtered = quickReplies.filter(qr => qr.shortcut?.toLowerCase().startsWith(query));
       setFilteredQR(filtered);
       setShowQuickMenu(filtered.length > 0);
     } else {

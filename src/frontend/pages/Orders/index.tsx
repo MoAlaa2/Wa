@@ -52,9 +52,9 @@ const OrdersPage = () => {
   };
 
   const filteredOrders = orders.filter(o => 
-    o.orderNumber.includes(searchQuery) ||
-    o.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    o.customerPhone.includes(searchQuery)
+    o.orderNumber?.includes(searchQuery) ||
+    o.customerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    o.customerPhone?.includes(searchQuery)
   );
 
   const getStatusBadge = (status: string, approval: string) => {

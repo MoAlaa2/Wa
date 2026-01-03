@@ -77,8 +77,8 @@ const ContactsPage = () => {
   };
 
   const filteredContacts = contacts.filter(c => 
-    c.firstName.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    c.phone.includes(searchQuery)
+    c.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    c.phone?.includes(searchQuery)
   );
 
   return (

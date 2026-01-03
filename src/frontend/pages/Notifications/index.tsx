@@ -56,7 +56,7 @@ const NotificationsPage = () => {
   };
 
   const filteredCampaigns = campaigns.filter(c => {
-    const matchesSearch = c.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = c.title?.toLowerCase().includes(searchQuery.toLowerCase()) ?? true;
     const matchesStatus = statusFilter === 'ALL' || c.status === statusFilter;
     return matchesSearch && matchesStatus;
   });

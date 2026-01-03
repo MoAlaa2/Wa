@@ -46,8 +46,8 @@ const KnowledgeBasePage = () => {
   };
 
   const filteredArticles = articles.filter(a => 
-    a.question.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    a.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    a.question?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    a.tags?.some((t: string) => t?.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
