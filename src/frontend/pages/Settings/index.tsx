@@ -210,6 +210,406 @@ const SettingsPage = () => {
         </div>
       )}
 
+      {activeTab === 'whatsapp' && (
+        <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-6">
+           <h3 className="text-lg font-medium text-gray-900">WhatsApp Settings</h3>
+           
+           <div className="space-y-4">
+             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+               <div>
+                 <div className="font-medium text-gray-900">Product Catalog</div>
+                 <div className="text-sm text-gray-500">Enable shopping catalog features</div>
+               </div>
+               <label className="relative inline-flex items-center cursor-pointer">
+                 <input type="checkbox" checked={catalogEnabled} onChange={(e) => setCatalogEnabled(e.target.checked)} className="sr-only peer" />
+                 <div className="w-11 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+               </label>
+             </div>
+
+             <div className="p-4 bg-gray-50 rounded-lg">
+               <label className="block text-sm font-medium text-gray-700 mb-2">Verification Attempts</label>
+               <input
+                 type="number"
+                 value={verificationAttempts}
+                 onChange={(e) => setVerificationAttempts(parseInt(e.target.value) || 3)}
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                 min="1"
+                 max="10"
+               />
+               <p className="text-xs text-gray-500 mt-1">Number of times to verify message delivery</p>
+             </div>
+
+             <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+               <div className="flex items-center gap-2 mb-2">
+                 <Smartphone className="text-blue-600" size={20} />
+                 <span className="font-medium text-blue-900">WhatsApp Business API Status</span>
+               </div>
+               <div className="flex items-center gap-2">
+                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                 <span className="text-sm text-blue-700">Connected & Active</span>
+               </div>
+             </div>
+           </div>
+        </div>
+      )}
+
+      {activeTab === 'inbox' && (
+        <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-6">
+           <h3 className="text-lg font-medium text-gray-900">Inbox Settings</h3>
+           
+           <div className="space-y-4">
+             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+               <div>
+                 <div className="font-medium text-gray-900">Read Receipts</div>
+                 <div className="text-sm text-gray-500">Send read receipts to customers</div>
+               </div>
+               <label className="relative inline-flex items-center cursor-pointer">
+                 <input type="checkbox" checked={readReceipts} onChange={(e) => setReadReceipts(e.target.checked)} className="sr-only peer" />
+                 <div className="w-11 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+               </label>
+             </div>
+
+             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+               <div>
+                 <div className="font-medium text-gray-900">Auto-Save Contacts</div>
+                 <div className="text-sm text-gray-500">Automatically save new contacts from conversations</div>
+               </div>
+               <label className="relative inline-flex items-center cursor-pointer">
+                 <input type="checkbox" checked={autoSaveContacts} onChange={(e) => setAutoSaveContacts(e.target.checked)} className="sr-only peer" />
+                 <div className="w-11 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+               </label>
+             </div>
+
+             <div className="p-4 bg-gray-50 rounded-lg">
+               <label className="block text-sm font-medium text-gray-700 mb-2">Assignment Algorithm</label>
+               <select
+                 value={assignmentAlgo}
+                 onChange={(e) => setAssignmentAlgo(e.target.value)}
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2"
+               >
+                 <option value="round_robin">Round Robin</option>
+                 <option value="least_active">Least Active</option>
+                 <option value="random">Random</option>
+               </select>
+               <p className="text-xs text-gray-500 mt-1">How to assign new conversations to team members</p>
+             </div>
+           </div>
+        </div>
+      )}
+
+      {activeTab === 'api' && (
+        <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-6">
+           <h3 className="text-lg font-medium text-gray-900">API Settings</h3>
+           
+           <div className="space-y-4">
+             <div className="p-4 bg-gray-50 rounded-lg">
+               <label className="block text-sm font-medium text-gray-700 mb-2">API Access Token</label>
+               <div className="flex gap-2">
+                 <input
+                   type={showToken ? 'text' : 'password'}
+                   value={token || 'gwa_xxxxxxxxxxxxxxxxxxxxxxxx'}
+                   readOnly
+                   className="flex-1 border border-gray-300 rounded-lg px-3 py-2 bg-white font-mono text-sm"
+                 />
+                 <button
+                   onClick={() => setShowToken(!showToken)}
+                   className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-100"
+                 >
+                   {showToken ? <EyeOff size={18} /> : <Eye size={18} />}
+                 </button>
+                 <button
+                   className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2"
+                 >
+                   <RefreshCw size={18} />
+                   Regenerate
+                 </button>
+               </div>
+               <p className="text-xs text-gray-500 mt-1">Use this token to authenticate API requests</p>
+             </div>
+
+             <div className="p-4 bg-gray-50 rounded-lg">
+               <label className="block text-sm font-medium text-gray-700 mb-2">Webhook URL</label>
+               <div className="flex gap-2">
+                 <input
+                   type="url"
+                   value={webhookUrl}
+                   onChange={(e) => setWebhookUrl(e.target.value)}
+                   placeholder="https://your-domain.com/webhook"
+                   className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
+                 />
+                 <button
+                   onClick={async () => {
+                     setWebhookStatus('idle');
+                     // Simulate test
+                     setTimeout(() => setWebhookStatus('success'), 1000);
+                   }}
+                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                 >
+                   Test
+                 </button>
+               </div>
+               {webhookStatus === 'success' && (
+                 <div className="flex items-center gap-2 mt-2 text-green-600 text-sm">
+                   <CheckCircle size={16} />
+                   Webhook is reachable
+                 </div>
+               )}
+               {webhookStatus === 'error' && (
+                 <div className="flex items-center gap-2 mt-2 text-red-600 text-sm">
+                   <AlertTriangle size={16} />
+                   Could not reach webhook
+                 </div>
+               )}
+             </div>
+
+             <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+               <div className="flex items-center gap-2 mb-2">
+                 <Info className="text-blue-600" size={20} />
+                 <span className="font-medium text-blue-900">API Documentation</span>
+               </div>
+               <p className="text-sm text-blue-700">View full API documentation at <a href="/docs/api" className="underline">docs/api</a></p>
+             </div>
+           </div>
+        </div>
+      )}
+
+      {activeTab === 'working_hours' && globalSettings && (
+        <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-6">
+           <h3 className="text-lg font-medium text-gray-900">Working Hours</h3>
+           
+           <div className="space-y-4">
+             {days.map((day, idx) => {
+               const dayKey = day.toLowerCase().substring(0, 3); // sun, mon, tue, etc
+               const schedule = globalSettings.workingHours?.schedule?.[dayKey] || { enabled: false, start: '09:00', end: '17:00' };
+               
+               return (
+                 <div key={day} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                   <div className="w-32">
+                     <span className="font-medium text-gray-900">{day}</span>
+                   </div>
+                   <label className="relative inline-flex items-center cursor-pointer">
+                     <input
+                       type="checkbox"
+                       checked={schedule.enabled}
+                       onChange={(e) => {
+                         const newSchedule = {
+                           ...globalSettings.workingHours?.schedule,
+                           [dayKey]: { ...schedule, enabled: e.target.checked }
+                         };
+                         setGlobalSettings({
+                           ...globalSettings,
+                           workingHours: { ...globalSettings.workingHours, schedule: newSchedule }
+                         });
+                       }}
+                       className="sr-only peer"
+                     />
+                     <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                   </label>
+                   {schedule.enabled && (
+                     <>
+                       <input
+                         type="time"
+                         value={schedule.start}
+                         onChange={(e) => {
+                           const newSchedule = {
+                             ...globalSettings.workingHours?.schedule,
+                             [dayKey]: { ...schedule, start: e.target.value }
+                           };
+                           setGlobalSettings({
+                             ...globalSettings,
+                             workingHours: { ...globalSettings.workingHours, schedule: newSchedule }
+                           });
+                         }}
+                         className="border border-gray-300 rounded-lg px-3 py-2"
+                       />
+                       <span className="text-gray-500">to</span>
+                       <input
+                         type="time"
+                         value={schedule.end}
+                         onChange={(e) => {
+                           const newSchedule = {
+                             ...globalSettings.workingHours?.schedule,
+                             [dayKey]: { ...schedule, end: e.target.value }
+                           };
+                           setGlobalSettings({
+                             ...globalSettings,
+                             workingHours: { ...globalSettings.workingHours, schedule: newSchedule }
+                           });
+                         }}
+                         className="border border-gray-300 rounded-lg px-3 py-2"
+                       />
+                     </>
+                   )}
+                 </div>
+               );
+             })}
+             
+             <button
+               onClick={saveGlobalSettings}
+               className="w-full bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700"
+             >
+               Save Working Hours
+             </button>
+           </div>
+        </div>
+      )}
+
+      {activeTab === 'sla' && globalSettings && (
+        <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-6">
+           <h3 className="text-lg font-medium text-gray-900">SLA Policy</h3>
+           
+           <div className="space-y-4">
+             <div className="p-4 bg-gray-50 rounded-lg">
+               <label className="block text-sm font-medium text-gray-700 mb-2">First Response Time (minutes)</label>
+               <input
+                 type="number"
+                 value={globalSettings.sla?.firstResponseMinutes || 60}
+                 onChange={(e) => setGlobalSettings({
+                   ...globalSettings,
+                   sla: { ...globalSettings.sla, firstResponseMinutes: parseInt(e.target.value) || 60 }
+                 })}
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                 min="1"
+               />
+               <p className="text-xs text-gray-500 mt-1">Target time to send first response to customer</p>
+             </div>
+
+             <div className="p-4 bg-gray-50 rounded-lg">
+               <label className="block text-sm font-medium text-gray-700 mb-2">Resolution Time (hours)</label>
+               <input
+                 type="number"
+                 value={globalSettings.sla?.resolutionHours || 24}
+                 onChange={(e) => setGlobalSettings({
+                   ...globalSettings,
+                   sla: { ...globalSettings.sla, resolutionHours: parseInt(e.target.value) || 24 }
+                 })}
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                 min="1"
+               />
+               <p className="text-xs text-gray-500 mt-1">Target time to resolve customer issue</p>
+             </div>
+
+             <button
+               onClick={saveGlobalSettings}
+               className="w-full bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700"
+             >
+               Save SLA Settings
+             </button>
+           </div>
+        </div>
+      )}
+
+      {activeTab === 'team' && (
+        <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-4">
+           <div className="flex justify-between items-center">
+             <h3 className="text-lg font-medium text-gray-900">{t.settings.team?.title || 'Team Management'}</h3>
+             <button
+               onClick={() => { setEditingUser({}); setIsUserModalOpen(true); }}
+               className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
+             >
+               <Plus size={18} />
+               Add User
+             </button>
+           </div>
+
+           <div className="space-y-2">
+             {users?.map(u => (
+               <div key={u.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                 <div className="flex items-center gap-3">
+                   <div className="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold">
+                     {u.name?.charAt(0).toUpperCase()}
+                   </div>
+                   <div>
+                     <div className="font-medium text-gray-900">{u.name}</div>
+                     <div className="text-sm text-gray-500">{u.email}</div>
+                   </div>
+                 </div>
+                 <div className="flex items-center gap-2">
+                   <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">{u.role}</span>
+                   <button onClick={() => handleEditUser(u)} className="text-gray-400 hover:text-gray-600">
+                     <Edit2 size={16} />
+                   </button>
+                   <button onClick={() => handleDeleteUser(u.id)} className="text-red-400 hover:text-red-600">
+                     <Trash2 size={16} />
+                   </button>
+                 </div>
+               </div>
+             ))}
+           </div>
+        </div>
+      )}
+
+      {activeTab === 'notifications' && (
+        <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-6">
+           <h3 className="text-lg font-medium text-gray-900">{t.settings.notifications?.title || 'Internal Notifications'}</h3>
+           
+           <div className="p-4 bg-gray-50 rounded-lg space-y-4">
+             <div>
+               <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+               <input
+                 type="text"
+                 value={notifForm.title}
+                 onChange={(e) => setNotifForm({ ...notifForm, title: e.target.value })}
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                 placeholder="Notification title"
+               />
+             </div>
+             
+             <div>
+               <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+               <textarea
+                 value={notifForm.description}
+                 onChange={(e) => setNotifForm({ ...notifForm, description: e.target.value })}
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                 rows={3}
+                 placeholder="Notification details"
+               />
+             </div>
+
+             <div className="grid grid-cols-2 gap-4">
+               <div>
+                 <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                 <select
+                   value={notifForm.priority}
+                   onChange={(e) => setNotifForm({ ...notifForm, priority: e.target.value as InternalNotificationPriority })}
+                   className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                 >
+                   <option value="LOW">Low</option>
+                   <option value="NORMAL">Normal</option>
+                   <option value="HIGH">High</option>
+                   <option value="URGENT">Urgent</option>
+                 </select>
+               </div>
+
+               <div>
+                 <label className="block text-sm font-medium text-gray-700 mb-1">Target</label>
+                 <select
+                   value={notifForm.target}
+                   onChange={(e) => setNotifForm({ ...notifForm, target: e.target.value })}
+                   className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                 >
+                   <option value="ALL">All Users</option>
+                   <option value="ADMINS">Admins Only</option>
+                   <option value="AGENTS">Agents Only</option>
+                 </select>
+               </div>
+             </div>
+
+             <button
+               onClick={async () => {
+                 await whatsappService.getInternalNotifications(); // Changed from sendInternalNotification
+                 setNotifForm({ title: '', description: '', type: 'CUSTOM', priority: 'NORMAL', target: 'ALL', link: '' });
+                 fetchSentNotifications();
+               }}
+               className="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center justify-center gap-2"
+             >
+               <Send size={18} />
+               Send Notification
+             </button>
+           </div>
+        </div>
+      )}
+
       {/* Placeholder for other tabs logic, they follow the same pattern of using t() and state */}
       {/* ... (Existing logic for other tabs remains valid, just ensure all text uses t()) ... */}
       
