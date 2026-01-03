@@ -76,10 +76,17 @@ const ContactsPage = () => {
     return listIds.map(id => lists.find(l => l.id === id)?.name).filter(Boolean).join(', ');
   };
 
-  const filteredContacts = contacts.filter(c => 
-    c.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    c.phone?.includes(searchQuery)
-  );
+  const filteredContacts = contacts.filter(c => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      c.firstName?.toLowerCase().includes(searchLower) || 
+      c.lastName?.toLowerCase().includes(searchLower) ||
+      c.name?.toLowerCase().includes(searchLower) ||
+      c.phone?.includes(searchQuery) ||
+      c.phoneNumber?.includes(searchQuery) ||
+      c.email?.toLowerCase().includes(searchLower)
+    );
+  });
 
   return (
     <div className="space-y-6">
@@ -179,29 +186,38 @@ const ContactsPage = () => {
                           </div>
                         </div>
                         <div className="ml-4 rtl:ml-0 rtl:mr-4">
-                          <div className="text-sm font-medium text-gray-900">{contact.firstName} {contact.lastName}</div>
-                          <div className="text-sm text-gray-500">{contact.phone}</div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {contact.firstName || contact.name || 'N/A'} {contact.lastName || ''}
+                          </div>
+                          <div className="text-sm text-gray-500">{contact.phone || contact.phoneNumber || 'N/A'}</div>
+                          {contact.email && <div className="text-xs text-gray-400">{contact.email}</div>}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        contact.status === 'SUBSCRIBED' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
-                        {t.contacts.status[contact.status as 'SUBSCRIBED' | 'UNSUBSCRIBED'] || contact.status}
-                      </span>
+                      {contact.status ? (
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          contact.status === 'SUBSCRIBED' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {t.contacts.status[contact.status as 'SUBSCRIBED' | 'UNSUBSCRIBED'] || contact.status}
+                        </span>
+                      ) : (
+                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-600">
+                          Active
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-wrap gap-1">
-                        {contact.tags.map(tagId => (
+                        {contact.tags?.length > 0 ? contact.tags.map(tagId => (
                           <span key={tagId} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800" style={{ borderLeft: `3px solid ${getTagColor(tagId)}` }}>
                             {getTagName(tagId)}
                           </span>
-                        ))}
+                        )) : <span className="text-gray-400 text-xs">-</span>}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {getListNames(contact.lists)}
+                      {contact.lists && contact.lists.length > 0 ? getListNames(contact.lists) : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(contact.createdAt).toLocaleDateString()}

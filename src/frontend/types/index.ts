@@ -443,7 +443,25 @@ export interface NotificationCampaign {
   emailReport: boolean;
 }
 
-export interface Contact { id: string; firstName: string; lastName?: string; phone: string; email?: string; avatar?: string; status: any; tags: string[]; lists: string[]; customAttributes: Record<string, string>; createdAt: string; lastModified: string; }
+export interface Contact { 
+  id: string; 
+  firstName?: string; 
+  lastName?: string; 
+  name?: string; // Backend field
+  phone?: string; 
+  phoneNumber?: string; // Backend field
+  email?: string; 
+  avatar?: string; 
+  company?: string; // Backend field
+  notes?: string; // Backend field
+  status?: any; 
+  tags: string[]; 
+  lists?: string[]; 
+  customAttributes?: Record<string, string>; 
+  createdAt: string; 
+  lastModified?: string;
+  lastContactedAt?: string; // Backend field
+}
 export interface ContactList { id: string; name: string; count: number; isDefault?: boolean; createdAt: string; }
 export interface ContactTag { id: string; name: string; color: string; count: number; }
 export interface ContactSegment { id: string; name: string; criteria: any[]; count: number; }
