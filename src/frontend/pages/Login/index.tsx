@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, ArrowRight, Loader2 } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Loader2, Shield } from 'lucide-react';
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -30,34 +30,68 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface p-4" dir={dir}>
-      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
-        
-        {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
-          <img 
-            src="https://guthmi.online/wp-content/uploads/2025/11/Asset-35-1.png" 
-            alt="Guthmi WA" 
-            className="h-16 mb-4 object-contain"
-          />
-          <h2 className="text-2xl font-bold text-gray-800 text-center">
-            {t.auth.loginTitle}
-          </h2>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4" dir={dir}>
+      
+      {/* Guthmi Logo - Large Gold Logo */}
+      <div className="mb-8 flex flex-col items-center">
+        <div className="relative w-64 h-64 flex items-center justify-center">
+          {/* Gold G Logo - SVG Recreation */}
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            {/* Main Gold Circle with cutout */}
+            <defs>
+              <clipPath id="gClip">
+                <rect x="0" y="0" width="200" height="200"/>
+              </clipPath>
+            </defs>
+            
+            {/* Main G shape */}
+            <path 
+              d="M100,10 A90,90 0 1,1 100,190 A90,90 0 0,1 100,10 M100,50 A50,50 0 0,0 100,150 A50,50 0 0,0 100,50" 
+              fill="#C8973A"
+              fillRule="evenodd"
+            />
+            
+            {/* Cutout for G opening */}
+            <rect x="100" y="10" width="100" height="80" fill="white"/>
+            
+            {/* Inner white circle cutout simulation */}
+            <circle cx="100" cy="100" r="45" fill="white"/>
+            
+            {/* Horizontal bar of G */}
+            <rect x="100" y="85" width="55" height="30" rx="15" fill="white"/>
+            
+            {/* Three dots */}
+            <circle cx="150" cy="25" r="18" fill="#C8973A"/>
+            <circle cx="175" cy="55" r="12" fill="#C8973A"/>
+            <circle cx="165" cy="90" r="8" fill="#C8973A"/>
+          </svg>
         </div>
+        
+        {/* Since 1942 Text */}
+        <h1 className="text-4xl font-bold text-[#C8973A] tracking-wide mt-2">
+          Since 1942
+        </h1>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Login Form Card */}
+      <div className="w-full max-w-sm">
+        <h2 className="text-xl font-bold text-gray-800 mb-6">
+          Log in to Guthmi WA
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t.auth.emailPlaceholder}
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 text-gray-400 rtl:right-3 rtl:left-auto" size={20} />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
               <input 
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all rtl:pr-10 rtl:pl-4"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C8973A] focus:border-[#C8973A] transition-all text-sm"
                 placeholder="admin@guthmi.com"
                 required
               />
@@ -65,16 +99,16 @@ const LoginPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t.auth.passwordPlaceholder}
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 text-gray-400 rtl:right-3 rtl:left-auto" size={20} />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
               <input 
                 type="password" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all rtl:pr-10 rtl:pl-4"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C8973A] focus:border-[#C8973A] transition-all text-sm"
                 placeholder="••••••••"
                 required
               />
@@ -82,7 +116,7 @@ const LoginPage = () => {
           </div>
 
           {error && (
-            <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg text-center font-medium">
+            <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg text-center font-medium border border-red-200">
               {error}
             </div>
           )}
@@ -90,19 +124,20 @@ const LoginPage = () => {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-primary hover:bg-secondary text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg shadow-green-200"
+            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center border border-gray-300 text-sm"
           >
-            {loading ? <Loader2 className="animate-spin" /> : (
+            {loading ? <Loader2 className="animate-spin" size={18} /> : (
               <>
-                {t.auth.loginButton}
-                <ArrowRight size={20} className="ml-2 rtl:mr-2 rtl:ml-0" />
+                Log In
+                <ArrowRight size={16} className="ml-2" />
               </>
             )}
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-500">
-           Protected by Enterprise Grade Security
+        <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-500">
+          <Shield size={14} />
+          <span>Protected by Enterprise Grade Security</span>
         </div>
       </div>
     </div>

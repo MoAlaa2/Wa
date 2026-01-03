@@ -38,7 +38,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const [isContactsOpen, setContactsOpen] = useState(false);
   const [isAnalyticsOpen, setAnalyticsOpen] = useState(true);
 
-  const activeClass = "bg-green-50 text-green-700 border-r-4 border-green-600";
+  const linkBase = "flex items-center px-4 py-2.5 mx-2 rounded-lg text-sm font-medium transition-all duration-200";
+  const activeClass = "bg-green-50 text-green-700 border-l-4 border-green-600";
   const inactiveClass = "text-gray-600 hover:bg-gray-50 hover:text-gray-900";
   
   const subMenuClass = dir === 'rtl' ? "pr-12" : "pl-12";
@@ -56,69 +57,79 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
   return (
     <>
+      {/* Backdrop */}
       <div 
-        className={`fixed inset-0 bg-black/50 z-20 lg:hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-black/50 z-20 lg:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={onClose}
       />
 
+      {/* Sidebar */}
       <aside className={`
-        w-64 bg-white border-r border-gray-200 h-screen flex flex-col fixed top-0 overflow-y-auto z-30 transition-transform duration-300
+        w-64 bg-white border-r border-gray-200 h-screen flex flex-col fixed top-0 overflow-y-auto z-30 
+        transition-transform duration-300 shadow-lg lg:shadow-none
         ${dir === 'rtl' ? 'right-0 border-r-0 border-l' : 'left-0'}
         ${isOpen ? 'translate-x-0' : (dir === 'rtl' ? 'translate-x-full' : '-translate-x-full')}
         lg:translate-x-0
       `}>
+        
         {/* Header */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100">
-          <div className="flex items-center">
-            <img 
-              src="https://guthmi.online/wp-content/uploads/2025/11/Asset-35-1.png" 
-              alt="Guthmi" 
-              className="h-8 w-auto object-contain"
-            />
-            <span className="ml-2 rtl:mr-2 rtl:ml-0 text-sm font-bold text-gray-800 hidden sm:block">Guthmi WA</span>
+        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100 bg-white">
+          <div className="flex items-center gap-2">
+            <div className="w-9 h-9 bg-[#C8973A] rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">G</span>
+            </div>
+            <div>
+              <span className="font-bold text-gray-800 text-sm block">Guthmi WA</span>
+              <span className="text-[10px] text-gray-400">Enterprise Platform</span>
+            </div>
           </div>
-          <button onClick={onClose} className="lg:hidden text-gray-500 hover:text-red-500">
-            <X size={20} />
+          <button 
+            onClick={onClose} 
+            className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"
+          >
+            <X size={18} />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-6 space-y-1">
+        <nav className="flex-1 py-4 space-y-1 overflow-y-auto">
           
+          {/* Dashboard */}
           {hasPermission('view_dashboard') && (
             <NavLink 
               to="/" 
               end
               onClick={onClose}
-              className={({ isActive }) => `flex items-center px-6 py-3 text-sm font-medium transition-colors ${isActive ? activeClass : inactiveClass}`}
+              className={({ isActive }) => `${linkBase} ${isActive ? activeClass : inactiveClass}`}
             >
-              <LayoutDashboard size={20} className="mr-3 rtl:mr-0 rtl:ml-3" />
+              <LayoutDashboard size={18} className="mr-3 rtl:mr-0 rtl:ml-3" />
               {t.common.dashboard}
             </NavLink>
           )}
 
+          {/* Analytics */}
           {showAnalytics && (
-            <div>
+            <div className="px-2">
               <button 
                 onClick={() => setAnalyticsOpen(!isAnalyticsOpen)}
-                className={`w-full flex items-center justify-between px-6 py-3 text-sm font-medium ${inactiveClass}`}
+                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-medium ${inactiveClass}`}
               >
                 <div className="flex items-center">
-                  <BarChart2 size={20} className="mr-3 rtl:mr-0 rtl:ml-3" />
+                  <BarChart2 size={18} className="mr-3 rtl:mr-0 rtl:ml-3" />
                   {t.common.analytics}
                 </div>
                 {renderChevron(isAnalyticsOpen)}
               </button>
               
               {isAnalyticsOpen && (
-                <div className="space-y-1 mt-1">
-                  <NavLink to="/analytics/messaging" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
+                <div className="space-y-0.5 mt-1 ml-4 rtl:mr-4 rtl:ml-0 border-l rtl:border-r rtl:border-l-0 border-gray-200 pl-4 rtl:pr-4 rtl:pl-0">
+                  <NavLink to="/analytics/messaging" onClick={onClose} className={({ isActive }) => `block py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
                     {t.nav.messagingAnalytics}
                   </NavLink>
-                  <NavLink to="/analytics/notifications" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
+                  <NavLink to="/analytics/notifications" onClick={onClose} className={({ isActive }) => `block py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
                     {t.nav.notificationAnalytics}
                   </NavLink>
-                  <NavLink to="/analytics/bots" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
+                  <NavLink to="/analytics/bots" onClick={onClose} className={({ isActive }) => `block py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
                     {t.nav.botAnalytics}
                   </NavLink>
                 </div>
@@ -126,64 +137,68 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
           )}
 
+          {/* Inbox */}
           {hasPermission('view_inbox') && (
             <NavLink 
               to="/inbox" 
               onClick={onClose}
-              className={({ isActive }) => `flex items-center px-6 py-3 text-sm font-medium transition-colors ${isActive ? activeClass : inactiveClass}`}
+              className={({ isActive }) => `${linkBase} ${isActive ? activeClass : inactiveClass}`}
             >
-              <MessageSquare size={20} className="mr-3 rtl:mr-0 rtl:ml-3" />
+              <MessageSquare size={18} className="mr-3 rtl:mr-0 rtl:ml-3" />
               {t.common.inbox}
             </NavLink>
           )}
 
+          {/* Orders */}
           {showOrders && (
             <NavLink 
               to="/orders" 
               onClick={onClose}
-              className={({ isActive }) => `flex items-center px-6 py-3 text-sm font-medium transition-colors ${isActive ? activeClass : inactiveClass}`}
+              className={({ isActive }) => `${linkBase} ${isActive ? activeClass : inactiveClass}`}
             >
-              <ShoppingBag size={20} className="mr-3 rtl:mr-0 rtl:ml-3" />
+              <ShoppingBag size={18} className="mr-3 rtl:mr-0 rtl:ml-3" />
               {t.common.orders}
             </NavLink>
           )}
 
+          {/* Notifications */}
           {hasPermission('manage_notifications') && (
             <NavLink 
               to="/notifications" 
               onClick={onClose}
-              className={({ isActive }) => `flex items-center px-6 py-3 text-sm font-medium transition-colors ${isActive ? activeClass : inactiveClass}`}
+              className={({ isActive }) => `${linkBase} ${isActive ? activeClass : inactiveClass}`}
             >
-              <Megaphone size={20} className="mr-3 rtl:mr-0 rtl:ml-3" />
+              <Megaphone size={18} className="mr-3 rtl:mr-0 rtl:ml-3" />
               {t.common.notifications}
             </NavLink>
           )}
 
+          {/* Contacts */}
           {showContacts && (
-            <div>
+            <div className="px-2">
               <button 
                 onClick={() => setContactsOpen(!isContactsOpen)}
-                className={`w-full flex items-center justify-between px-6 py-3 text-sm font-medium ${inactiveClass}`}
+                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-medium ${inactiveClass}`}
               >
                 <div className="flex items-center">
-                  <Users size={20} className="mr-3 rtl:mr-0 rtl:ml-3" />
+                  <Users size={18} className="mr-3 rtl:mr-0 rtl:ml-3" />
                   {t.common.contacts}
                 </div>
                 {renderChevron(isContactsOpen)}
               </button>
               
               {isContactsOpen && (
-                <div className="space-y-1 mt-1">
-                  <NavLink to="/contacts" end onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
+                <div className="space-y-0.5 mt-1 ml-4 rtl:mr-4 rtl:ml-0 border-l rtl:border-r rtl:border-l-0 border-gray-200 pl-4 rtl:pr-4 rtl:pl-0">
+                  <NavLink to="/contacts" end onClick={onClose} className={({ isActive }) => `block py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
                     {t.nav.allContacts}
                   </NavLink>
-                  <NavLink to="/contacts/lists" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
+                  <NavLink to="/contacts/lists" onClick={onClose} className={({ isActive }) => `block py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
                     {t.nav.lists}
                   </NavLink>
-                  <NavLink to="/contacts/tags" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
+                  <NavLink to="/contacts/tags" onClick={onClose} className={({ isActive }) => `block py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
                     {t.nav.tags}
                   </NavLink>
-                  <NavLink to="/contacts/segments" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
+                  <NavLink to="/contacts/segments" onClick={onClose} className={({ isActive }) => `block py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
                     {t.nav.segments}
                   </NavLink>
                 </div>
@@ -191,43 +206,38 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
           )}
 
+          {/* Content Library */}
           {showContentLibrary && (
-            <div>
+            <div className="px-2">
               <button 
                 onClick={() => setContentLibraryOpen(!isContentLibraryOpen)}
-                className={`w-full flex items-center justify-between px-6 py-3 text-sm font-medium ${inactiveClass}`}
+                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-medium ${inactiveClass}`}
               >
                 <div className="flex items-center">
-                  <Library size={20} className="mr-3 rtl:mr-0 rtl:ml-3" />
+                  <Library size={18} className="mr-3 rtl:mr-0 rtl:ml-3" />
                   {t.common.contentLibrary}
                 </div>
                 {renderChevron(isContentLibraryOpen)}
               </button>
               
               {isContentLibraryOpen && (
-                <div className="space-y-1 mt-1">
+                <div className="space-y-0.5 mt-1 ml-4 rtl:mr-4 rtl:ml-0 border-l rtl:border-r rtl:border-l-0 border-gray-200 pl-4 rtl:pr-4 rtl:pl-0">
                   {hasPermission('manage_templates') && (
-                    <NavLink to="/content/templates" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
-                      <div className="flex items-center">
-                        <FileText size={16} className="mr-2 rtl:mr-0 rtl:ml-2" />
-                        {t.nav.templates}
-                      </div>
+                    <NavLink to="/content/templates" onClick={onClose} className={({ isActive }) => `flex items-center gap-2 py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
+                      <FileText size={14} />
+                      {t.nav.templates}
                     </NavLink>
                   )}
                   {hasPermission('manage_flows') && (
-                    <NavLink to="/content/flows" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
-                      <div className="flex items-center">
-                        <Workflow size={16} className="mr-2 rtl:mr-0 rtl:ml-2" />
-                        {t.nav.flows}
-                      </div>
+                    <NavLink to="/content/flows" onClick={onClose} className={({ isActive }) => `flex items-center gap-2 py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
+                      <Workflow size={14} />
+                      {t.nav.flows}
                     </NavLink>
                   )}
                   {hasPermission('manage_quick_replies') && (
-                    <NavLink to="/content/quick-replies" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
-                      <div className="flex items-center">
-                        <MessageCircle size={16} className="mr-2 rtl:mr-0 rtl:ml-2" />
-                        {t.nav.quickReplies}
-                      </div>
+                    <NavLink to="/content/quick-replies" onClick={onClose} className={({ isActive }) => `flex items-center gap-2 py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
+                      <MessageCircle size={14} />
+                      {t.nav.quickReplies}
                     </NavLink>
                   )}
                 </div>
@@ -235,43 +245,38 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
           )}
 
+          {/* Automation */}
           {showAutomation && (
-            <div>
+            <div className="px-2">
               <button 
                 onClick={() => setAutomationOpen(!isAutomationOpen)}
-                className={`w-full flex items-center justify-between px-6 py-3 text-sm font-medium ${inactiveClass}`}
+                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-medium ${inactiveClass}`}
               >
                 <div className="flex items-center">
-                  <Bot size={20} className="mr-3 rtl:mr-0 rtl:ml-3" />
+                  <Bot size={18} className="mr-3 rtl:mr-0 rtl:ml-3" />
                   {t.common.automation}
                 </div>
                 {renderChevron(isAutomationOpen)}
               </button>
               
               {isAutomationOpen && (
-                <div className="space-y-1 mt-1">
+                <div className="space-y-0.5 mt-1 ml-4 rtl:mr-4 rtl:ml-0 border-l rtl:border-r rtl:border-l-0 border-gray-200 pl-4 rtl:pr-4 rtl:pl-0">
                   {hasPermission('manage_auto_replies') && (
-                    <NavLink to="/automation/auto-replies" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
-                      <div className="flex items-center">
-                        <Zap size={16} className="mr-2 rtl:mr-0 rtl:ml-2" />
-                        {t.nav.autoReplies}
-                      </div>
+                    <NavLink to="/automation/auto-replies" onClick={onClose} className={({ isActive }) => `flex items-center gap-2 py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
+                      <Zap size={14} />
+                      {t.nav.autoReplies}
                     </NavLink>
                   )}
                   {hasPermission('manage_chatbot') && (
-                    <NavLink to="/automation/chatbot" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
-                      <div className="flex items-center">
-                        <Bot size={16} className="mr-2 rtl:mr-0 rtl:ml-2" />
-                        {t.nav.chatbot}
-                      </div>
+                    <NavLink to="/automation/chatbot" onClick={onClose} className={({ isActive }) => `flex items-center gap-2 py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
+                      <Bot size={14} />
+                      {t.nav.chatbot}
                     </NavLink>
                   )}
                   {hasPermission('manage_knowledge_base') && (
-                    <NavLink to="/automation/knowledge-base" onClick={onClose} className={({ isActive }) => `block py-2 text-sm ${subMenuClass} ${isActive ? "text-green-700 font-medium" : "text-gray-500 hover:text-gray-900"}`}>
-                      <div className="flex items-center">
-                        <BookOpen size={16} className="mr-2 rtl:mr-0 rtl:ml-2" />
-                        {t.nav.knowledgeBase}
-                      </div>
+                    <NavLink to="/automation/knowledge-base" onClick={onClose} className={({ isActive }) => `flex items-center gap-2 py-2 text-sm rounded-lg px-2 ${isActive ? "text-green-700 font-medium bg-green-50" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"}`}>
+                      <BookOpen size={14} />
+                      {t.nav.knowledgeBase}
                     </NavLink>
                   )}
                 </div>
@@ -279,25 +284,27 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
           )}
 
+          {/* Settings */}
           {hasPermission('view_settings') && (
             <NavLink 
               to="/settings" 
               onClick={onClose}
-              className={({ isActive }) => `flex items-center px-6 py-3 text-sm font-medium transition-colors ${isActive ? activeClass : inactiveClass}`}
+              className={({ isActive }) => `${linkBase} ${isActive ? activeClass : inactiveClass}`}
             >
-              <Settings size={20} className="mr-3 rtl:mr-0 rtl:ml-3" />
+              <Settings size={18} className="mr-3 rtl:mr-0 rtl:ml-3" />
               {t.common.settings}
             </NavLink>
           )}
 
         </nav>
 
-        <div className="p-4 border-t border-gray-200">
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-100 bg-gray-50">
           <div className="text-xs text-gray-500 text-center font-medium">
-             {t.common.madeWithLove}
+            Guthmi WA Enterprise
           </div>
-          <div className="text-[10px] text-gray-400 text-center mt-1">
-            v1.1.0 Enterprise
+          <div className="text-[10px] text-gray-400 text-center mt-0.5">
+            v2.1.0 • Since 1942
           </div>
         </div>
       </aside>

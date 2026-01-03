@@ -5,6 +5,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  base: '/',
   root: '.',
   publicDir: 'public',
   resolve: {
@@ -15,6 +16,15 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    sourcemap: false,
+    minify: 'esbuild',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
   },
   server: {
     port: 5173,
