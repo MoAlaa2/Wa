@@ -1,6 +1,7 @@
 {
+  "name": "wa-root",
+  "private": true,
   "scripts": {
-    "build": "npx vite build",
-    "dev": "vite"
+    "build": "cd src/frontend && npm install && npm run build"
   }
 }
