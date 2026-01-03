@@ -199,7 +199,10 @@ export const en = {
       total: "Total",
       submitApproval: "Submit for Approval",
       createLink: "Create & Send Link",
-      processing: "Processing..."
+      processing: "Processing...",
+      orderSubmittedForApproval: "Order submitted for approval",
+      orderLinkMessage: "Order link sent to customer"
+  }
     }
   },
   orders: {
