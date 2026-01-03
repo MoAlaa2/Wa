@@ -201,7 +201,8 @@ export const ar = {
       total: "الإجمالي",
       submitApproval: "إرسال للموافقة",
       createLink: "إنشاء وإرسال الرابط",
-      processing: "جاري المعالجة..."
+      processing: "جاري المعالجة...",
+      
     }
   },
   orders: {
