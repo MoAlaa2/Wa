@@ -15,6 +15,32 @@ interface ContactModalProps {
 
 export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, contact, lists, tags }) => {
   const { t } = useLanguage();
+  
+  // Arab countries with their codes
+  const arabCountries = [
+    { code: '+966', name: 'السعودية', flag: '🇸🇦', nameEn: 'Saudi Arabia' },
+    { code: '+971', name: 'الإمارات', flag: '🇦🇪', nameEn: 'UAE' },
+    { code: '+965', name: 'الكويت', flag: '🇰🇼', nameEn: 'Kuwait' },
+    { code: '+974', name: 'قطر', flag: '🇶🇦', nameEn: 'Qatar' },
+    { code: '+973', name: 'البحرين', flag: '🇧🇭', nameEn: 'Bahrain' },
+    { code: '+968', name: 'عمان', flag: '🇴🇲', nameEn: 'Oman' },
+    { code: '+962', name: 'الأردن', flag: '🇯🇴', nameEn: 'Jordan' },
+    { code: '+961', name: 'لبنان', flag: '🇱🇧', nameEn: 'Lebanon' },
+    { code: '+20', name: 'مصر', flag: '🇪🇬', nameEn: 'Egypt' },
+    { code: '+212', name: 'المغرب', flag: '🇲🇦', nameEn: 'Morocco' },
+    { code: '+213', name: 'الجزائر', flag: '🇩🇿', nameEn: 'Algeria' },
+    { code: '+216', name: 'تونس', flag: '🇹🇳', nameEn: 'Tunisia' },
+    { code: '+218', name: 'ليبيا', flag: '🇱🇾', nameEn: 'Libya' },
+    { code: '+249', name: 'السودان', flag: '🇸🇩', nameEn: 'Sudan' },
+    { code: '+964', name: 'العراق', flag: '🇮🇶', nameEn: 'Iraq' },
+    { code: '+963', name: 'سوريا', flag: '🇸🇾', nameEn: 'Syria' },
+    { code: '+967', name: 'اليمن', flag: '🇾🇪', nameEn: 'Yemen' },
+    { code: '+970', name: 'فلسطين', flag: '🇵🇸', nameEn: 'Palestine' },
+  ];
+
+  const [countryCode, setCountryCode] = useState('+966'); // Default Saudi Arabia
+  const [phoneNumber, setPhoneNumber] = useState('');
+
   const [formData, setFormData] = useState<Partial<Contact>>({
     firstName: '',
     lastName: '',
@@ -29,6 +55,24 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
   useEffect(() => {
     if (contact) {
       // Map backend fields to frontend fields
+      const fullPhone = contact.phone || contact.phoneNumber || '';
+      
+      // Parse phone number to extract country code and number
+      let extractedCountryCode = '+966'; // Default
+      let extractedNumber = fullPhone;
+      
+      // Try to match with our country codes
+      for (const country of arabCountries) {
+        if (fullPhone.startsWith(country.code)) {
+          extractedCountryCode = country.code;
+          extractedNumber = fullPhone.substring(country.code.length);
+          break;
+        }
+      }
+      
+      setCountryCode(extractedCountryCode);
+      setPhoneNumber(extractedNumber);
+      
       setFormData({
         ...contact,
         firstName: contact.firstName || contact.name?.split(' ')[0] || '',
@@ -41,6 +85,8 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
         customAttributes: contact.customAttributes || {}
       });
     } else {
+      setCountryCode('+966'); // Reset to default
+      setPhoneNumber('');
       setFormData({
         firstName: '',
         lastName: '',
@@ -125,16 +171,40 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
               </div>
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t.contacts.modal.phone}</label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-2.5 text-gray-400 rtl:right-3 rtl:left-auto" size={18} />
-                  <input 
-                    required
-                    type="tel" 
-                    value={formData.phone} 
-                    onChange={e => setFormData({...formData, phone: e.target.value})}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 rtl:pr-10 rtl:pl-4"
-                    placeholder="+97150..."
-                  />
+                <div className="flex gap-2">
+                  {/* Country Code Dropdown */}
+                  <select
+                    value={countryCode}
+                    onChange={(e) => {
+                      setCountryCode(e.target.value);
+                      setFormData({...formData, phone: e.target.value + phoneNumber});
+                    }}
+                    className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 bg-white"
+                  >
+                    {arabCountries.map((country) => (
+                      <option key={country.code} value={country.code}>
+                        {country.flag} {country.code}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  {/* Phone Number Input */}
+                  <div className="relative flex-1">
+                    <Phone className="absolute left-3 top-2.5 text-gray-400 rtl:right-3 rtl:left-auto" size={18} />
+                    <input 
+                      required
+                      type="tel" 
+                      value={phoneNumber} 
+                      onChange={(e) => {
+                        // Only allow digits
+                        const value = e.target.value.replace(/\D/g, '');
+                        setPhoneNumber(value);
+                        setFormData({...formData, phone: countryCode + value});
+                      }}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 rtl:pr-10 rtl:pl-4"
+                      placeholder="501234567"
+                    />
+                  </div>
                 </div>
               </div>
               <div className="mt-4">
