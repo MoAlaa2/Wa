@@ -15,19 +15,20 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError('');
+  setLoading(true);
 
-    const success = await login(email);
-    if (success) {
-      navigate('/');
-    } else {
-      setError(t.auth.error);
-    }
-    setLoading(false);
-  };
+  const success = await login(email, password); // ✅ هنا
+  if (success) {
+    navigate('/');
+  } else {
+    setError(t.auth.error);
+  }
+
+  setLoading(false);
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface p-4" dir={dir}>
