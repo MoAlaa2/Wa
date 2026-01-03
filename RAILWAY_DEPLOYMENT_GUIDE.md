@@ -1,5 +1,15 @@
 # Railway Deployment Guide
 
+## Quick Reference
+
+| Item | Value |
+|------|-------|
+| **Frontend URL** | https://wa-production-d791.up.railway.app/ |
+| **Backend URL** | https://guthmi-api-production.up.railway.app/api |
+| **Login Email** | info@guthmi.com |
+| **Login Password** | Admin@123 |
+| **Latest Commit** | ae8a116 - Null safety fixes |
+
 ## Current Setup
 - **Frontend**: https://wa-production-d791.up.railway.app/
 - **Backend**: https://guthmi-api-production.up.railway.app/api
@@ -56,34 +66,74 @@ const allowedOrigins = [
 ## Testing After Deployment
 
 ### 1. Clear Browser Data
-Before testing, clear your browser's localStorage:
+Before testing, clear your browser's cache and localStorage:
+
+**Option A: Use Incognito/Private Window**
+- Chrome: Cmd+Shift+N (Mac) or Ctrl+Shift+N (Windows)
+- Firefox: Cmd+Shift+P (Mac) or Ctrl+Shift+P (Windows)
+
+**Option B: Hard Refresh**
+- Mac: Cmd+Shift+R
+- Windows/Linux: Ctrl+Shift+R
+
+**Option C: Clear All Cache**
 ```javascript
 // Open browser console on your site and run:
 localStorage.clear();
-location.reload();
+sessionStorage.clear();
+location.reload(true);
 ```
 
 ### 2. Test Login Flow
 1. Go to https://wa-production-d791.up.railway.app/
-2. It should redirect to login (you shouldn't see 401 errors in console yet)
-3. Enter valid credentials and login
+2. Wait for Railway deployment to complete (check Railway dashboard)
+3. Use the correct credentials:
+   - **Email:** `info@guthmi.com`
+   - **Password:** `Admin@123`
 4. Check Network tab - should see successful API calls with 200 status
 
-### 3. Test API Health
+### 3. Verify Backend is Running
 ```bash
-curl https://guthmi-api-production.up.railway.app/api/health
+# Test the backend API directly
+curl -s -X POST https://guthmi-api-production.up.railway.app/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "info@guthmi.com", "password": "Admin@123"}' | jq .
+```
+
+**Expected Response:**
+```json
+{
+  "token": "eyJhbGc...",
+  "user": {
+    "id": "...",
+    "email": "info@guthmi.com",
+    "role": "admin",
+    ...
+  }
+}
 ```
 
 ## Common Issues
 
 ### Issue: Still getting 401 errors
 **Solution**: 
-1. Clear browser cache and localStorage
-2. Make sure you're using valid login credentials
-3. Check that the backend JWT tokens are being generated correctly
+1. **Check Railway deployment status** - Go to Railway dashboard and verify the frontend build completed successfully
+2. **Clear browser cache completely** - Use Incognito mode or hard refresh (Cmd+Shift+R)
+3. **Verify credentials** - Use `info@guthmi.com` with password `Admin@123`
+4. **Check backend logs** - If backend is returning 401, credentials might have changed
+
+### Issue: Templates showing 500 error
+**Solution**: 
+1. **Check backend logs** on Railway for the guthmi-api-production service
+2. **Verify environment variables** - Make sure WhatsApp API credentials are set
+3. **Check database** - Ensure templates table exists and is accessible
+4. The frontend now handles this gracefully - page won't crash, just shows empty state
 
 ### Issue: CORS errors
-**Solution**: Already fixed! Backend is returning correct CORS headers.
+**Solution**: Already fixed! Backend is returning correct CORS headers:
+```
+access-control-allow-origin: https://wa-production-d791.up.railway.app
+```
 
 ### Issue: Environment variables not working
 **Solution**: 
@@ -98,6 +148,17 @@ curl https://guthmi-api-production.up.railway.app/api/health
 2. **NotificationContext.tsx** - Added authentication check before fetching
 3. **AuthContext.tsx** - Added explicit Content-Type header
 4. **.env.production** - Clarified for Railway deployment
+5. **Dashboard/index.tsx** - Added null checks for analytics data (totalMessages, readRate, totalCost, failedRate)
+6. **InternalNotifications/index.tsx** - Added timestamp null check
+7. **Orders/OrderDetailsDrawer.tsx** - Added timestamp null check for audit log
+8. **Contacts/ImportPage.tsx** - Added startedAt null check
+9. **Templates/index.tsx** - Added null checks for template.name and error handling
+10. **Contacts/ContactsPage.tsx** - Added null checks for firstName and phone
+11. **Automation/KnowledgeBase/index.tsx** - Added null checks for question and tags
+12. **ContentLibrary/QuickReplies/index.tsx** - Added null checks for shortcut and content
+13. **Notifications/index.tsx** - Added null check for campaign title
+14. **Orders/index.tsx** - Added null checks for orderNumber, customerName, customerPhone
+15. **Inbox/ChatInput.tsx** - Added null check for quick reply shortcut
 
 ## Local Development
 
