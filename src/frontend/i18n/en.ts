@@ -202,8 +202,7 @@ export const en = {
       processing: "Processing...",
       orderSubmittedForApproval: "Order submitted for approval",
       orderLinkMessage: "Order link sent to customer"
-  }
-    }
+      }
   },
   orders: {
     title: "Orders Management",
