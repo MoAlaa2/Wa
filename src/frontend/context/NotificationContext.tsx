@@ -19,6 +19,13 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
   const [loading, setLoading] = useState(true);
 
   const fetchNotifications = async () => {
+    // Only fetch if user is authenticated
+    const token = localStorage.getItem('guthmi_token');
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const data = await whatsappService.getInternalNotifications();
       setNotifications(data);

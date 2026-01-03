@@ -42,7 +42,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         throw new Error('Email and password are required');
       }
       const payload = { email, password }; 
-      const { data } = await axios.post(`${API_URL}/auth/login`, payload);
+      const { data } = await axios.post(`${API_URL}/auth/login`, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       
       if (data.token && data.user) {
         localStorage.setItem('guthmi_token', data.token);
