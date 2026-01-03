@@ -165,12 +165,32 @@ export const whatsappService = {
   },
   saveContact: async (c: any) => { await api.post('/contacts', c); },
   deleteContact: async (id: string) => { await api.delete(`/contacts/${id}`); },
-  getContactLists: async () => [],
-  saveContactList: async (l: any) => l,
-  deleteContactList: async (id: string) => {},
-  getContactTags: async () => [],
-  saveContactTag: async (t: any) => t,
-  deleteContactTag: async (id: string) => {},
+  getContactLists: async () => {
+    try { const { data } = await api.get('/contacts/lists'); return data; } catch { return []; }
+  },
+  saveContactList: async (l: any) => {
+    if (l.id) {
+      const { data } = await api.put(`/contacts/lists/${l.id}`, l);
+      return data;
+    } else {
+      const { data } = await api.post('/contacts/lists', l);
+      return data;
+    }
+  },
+  deleteContactList: async (id: string) => { await api.delete(`/contacts/lists/${id}`); },
+  getContactTags: async () => {
+    try { const { data } = await api.get('/contacts/tags'); return data; } catch { return []; }
+  },
+  saveContactTag: async (t: any) => {
+    if (t.id) {
+      const { data } = await api.put(`/contacts/tags/${t.id}`, t);
+      return data;
+    } else {
+      const { data } = await api.post('/contacts/tags', t);
+      return data;
+    }
+  },
+  deleteContactTag: async (id: string) => { await api.delete(`/contacts/tags/${id}`); },
   importContacts: async (file: any) => ({}) as ImportJob,
   getImportHistory: async () => [],
 

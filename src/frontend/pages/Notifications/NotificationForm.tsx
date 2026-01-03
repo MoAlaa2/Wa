@@ -42,7 +42,7 @@ const NotificationForm = () => {
          setContactsCount(contacts.length);
 
          // Fetch lists
-         const listsData = await whatsappService.getLists();
+         const listsData = await whatsappService.getContactLists();
          setLists(listsData || []);
 
          if (id) {
