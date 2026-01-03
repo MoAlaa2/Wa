@@ -16,6 +16,8 @@ const NotificationForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState<Template[]>([]);
+  const [contactsCount, setContactsCount] = useState(0);
+  const [lists, setLists] = useState<any[]>([]);
   
   // Form State
   const [formData, setFormData] = useState<Partial<NotificationCampaign>>({
@@ -30,12 +32,25 @@ const NotificationForm = () => {
 
   useEffect(() => {
     const init = async () => {
-       const tmpls = await whatsappService.getTemplates();
-       setTemplates(tmpls.filter(t => t.status === 'APPROVED'));
+       try {
+         // Fetch templates
+         const tmpls = await whatsappService.getTemplates();
+         setTemplates(tmpls.filter(t => t.status === 'APPROVED'));
 
-       if (id) {
-         const existing = await whatsappService.getCampaign(id);
-         if (existing) setFormData(existing);
+         // Fetch contacts count
+         const contacts = await whatsappService.getContacts();
+         setContactsCount(contacts.length);
+
+         // Fetch lists
+         const listsData = await whatsappService.getLists();
+         setLists(listsData || []);
+
+         if (id) {
+           const existing = await whatsappService.getCampaign(id);
+           if (existing) setFormData(existing);
+         }
+       } catch (error) {
+         console.error('Error fetching data:', error);
        }
     };
     init();
@@ -170,12 +185,14 @@ const NotificationForm = () => {
              <div className="space-y-4 text-left">
                <label className="block p-4 border rounded-xl cursor-pointer hover:bg-gray-50 border-gray-200">
                   <input type="radio" name="list" className="mr-3" defaultChecked />
-                  <span className="font-medium">All Contacts (5,200)</span>
+                  <span className="font-medium">All Contacts ({contactsCount.toLocaleString()})</span>
                </label>
-               <label className="block p-4 border rounded-xl cursor-pointer hover:bg-gray-50 border-gray-200">
-                  <input type="radio" name="list" className="mr-3" />
-                  <span className="font-medium">VIP Customers (120)</span>
-               </label>
+               {lists.map((list) => (
+                 <label key={list.id} className="block p-4 border rounded-xl cursor-pointer hover:bg-gray-50 border-gray-200">
+                    <input type="radio" name="list" className="mr-3" />
+                    <span className="font-medium">{list.name} ({list.contactCount || 0})</span>
+                 </label>
+               ))}
                <div className="p-4 border border-dashed border-gray-300 rounded-xl bg-gray-50 opacity-60">
                   <div className="flex justify-between items-center">
                     <span className="font-medium text-gray-500">{t.notificationsPage.wizard.recipients.smartSegments}</span>
