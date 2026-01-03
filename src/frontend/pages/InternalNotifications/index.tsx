@@ -79,7 +79,7 @@ const InternalNotificationsPage = () => {
                       {!notif.read && <span className="w-2 h-2 bg-blue-500 rounded-full"></span>}
                     </div>
                     <span className="text-xs text-gray-400 whitespace-nowrap">
-                      {new Date(notif.timestamp).toLocaleString()}
+                      {notif.timestamp ? new Date(notif.timestamp).toLocaleString() : 'N/A'}
                     </span>
                   </div>
                   
