@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -30,78 +29,76 @@ import ContactTagsPage from './pages/Contacts/TagsPage';
 import ContactSegmentsPage from './pages/Contacts/SegmentsPage';
 import ContactImportPage from './pages/Contacts/ImportPage';
 
-// Protected Route Wrapper
-const ProtectedLayout = () => {
+/* 🔒 Auth Guard */
+const ProtectedRoute = () => {
   const { isAuthenticated } = useAuth();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return (
-    <Layout>
-      <Outlet />
-    </Layout>
-  );
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 const App: React.FC = () => {
   return (
-    <LanguageProvider>
+    <HashRouter>
       <AuthProvider>
-        <NotificationProvider>
-          <HashRouter>
+        <LanguageProvider>
+          <NotificationProvider>
+
             <Routes>
-              {/* Public Route */}
+              {/* 🔓 Public */}
               <Route path="/login" element={<LoginPage />} />
 
-              {/* Protected Routes */}
-              <Route element={<ProtectedLayout />}>
-                <Route path="/" element={<Dashboard />} />
-                
-                {/* Analytics */}
-                <Route path="/analytics/:type" element={<AnalyticsPage />} />
+              {/* 🔒 Protected */}
+              <Route element={<ProtectedRoute />}>
+                <Route element={<Layout />}>
+                  
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
 
-                <Route path="/inbox" element={<InboxPage />} />
-                
-                {/* Orders */}
-                <Route path="/orders" element={<OrdersPage />} />
+                  {/* Analytics */}
+                  <Route path="/analytics/:type" element={<AnalyticsPage />} />
 
-                {/* Notifications / Campaigns */}
-                <Route path="/notifications" element={<NotificationsPage />} />
-                <Route path="/notifications/new" element={<NotificationForm />} />
-                <Route path="/notifications/edit/:id" element={<NotificationForm />} />
+                  {/* Inbox */}
+                  <Route path="/inbox" element={<InboxPage />} />
 
-                {/* Internal Notifications (History) */}
-                <Route path="/internal-notifications" element={<InternalNotificationsPage />} />
+                  {/* Orders */}
+                  <Route path="/orders" element={<OrdersPage />} />
 
-                {/* Contacts Module */}
-                <Route path="/contacts" element={<ContactsPage />} />
-                <Route path="/contacts/lists" element={<ContactListsPage />} />
-                <Route path="/contacts/tags" element={<ContactTagsPage />} />
-                <Route path="/contacts/segments" element={<ContactSegmentsPage />} />
-                <Route path="/contacts/import" element={<ContactImportPage />} />
+                  {/* Notifications */}
+                  <Route path="/notifications" element={<NotificationsPage />} />
+                  <Route path="/notifications/new" element={<NotificationForm />} />
+                  <Route path="/notifications/edit/:id" element={<NotificationForm />} />
+                  <Route path="/internal-notifications" element={<InternalNotificationsPage />} />
 
-                {/* Content Library */}
-                <Route path="/content/templates" element={<TemplatesPage />} />
-                <Route path="/content/flows" element={<FlowsPage />} />
-                <Route path="/content/quick-replies" element={<QuickRepliesPage />} />
-                
-                {/* Automation */}
-                <Route path="/automation/auto-replies" element={<AutoRepliesPage />} />
-                <Route path="/automation/chatbot" element={<ChatbotBuilderPage />} />
-                <Route path="/automation/knowledge-base" element={<KnowledgeBasePage />} />
-                
-                <Route path="/settings" element={<SettingsPage />} />
+                  {/* Contacts */}
+                  <Route path="/contacts" element={<ContactsPage />} />
+                  <Route path="/contacts/lists" element={<ContactListsPage />} />
+                  <Route path="/contacts/tags" element={<ContactTagsPage />} />
+                  <Route path="/contacts/segments" element={<ContactSegmentsPage />} />
+                  <Route path="/contacts/import" element={<ContactImportPage />} />
+
+                  {/* Content Library */}
+                  <Route path="/content/templates" element={<TemplatesPage />} />
+                  <Route path="/content/flows" element={<FlowsPage />} />
+                  <Route path="/content/quick-replies" element={<QuickRepliesPage />} />
+
+                  {/* Automation */}
+                  <Route path="/automation/auto-replies" element={<AutoRepliesPage />} />
+                  <Route path="/automation/chatbot" element={<ChatbotBuilderPage />} />
+                  <Route path="/automation/knowledge-base" element={<KnowledgeBasePage />} />
+
+                  {/* Settings */}
+                  <Route path="/settings" element={<SettingsPage />} />
+
+                </Route>
               </Route>
 
               {/* Fallback */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </HashRouter>
-        </NotificationProvider>
+
+          </NotificationProvider>
+        </LanguageProvider>
       </AuthProvider>
-    </LanguageProvider>
+    </HashRouter>
   );
 };
 
