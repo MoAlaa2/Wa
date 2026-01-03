@@ -3,30 +3,16 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
+  root: '.', // مهم
   plugins: [react()],
-
-  // مهم جداً مع Vercel + SPA
   base: '/',
-
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src/frontend'),
+      '@': path.resolve(__dirname, './'),
     },
   },
-
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    sourcemap: false,
-  },
-
-  server: {
-    port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-    },
   },
 });
