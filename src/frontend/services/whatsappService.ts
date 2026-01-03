@@ -7,7 +7,9 @@ import {
   Team, Product, Order, QuickReply, GlobalSettings 
 } from '../types';
 
-const API_URL = (import.meta as any).env.VITE_API_BASE_URL || '/api';
+// CRITICAL: Must use full URL in production (Vercel has no proxy)
+// In development, Vite proxy handles /api -> localhost:3000
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://guthmi-api-production.up.railway.app/api';
 
 const api = axios.create({
   baseURL: API_URL,

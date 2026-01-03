@@ -22,8 +22,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [users, setUsers] = useState<User[]>([]); 
   const [loading, setLoading] = useState(true);
 
-  // Use Vite env variable (not Next.js)
-  const API_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+  // CRITICAL: Must use full URL in production (Vercel has no proxy)
+  // In development, Vite proxy handles /api -> localhost:3000
+  const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://guthmi-api-production.up.railway.app/api';
 
   useEffect(() => {
     const token = localStorage.getItem('guthmi_token');
