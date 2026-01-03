@@ -126,31 +126,31 @@ const Dashboard = () => {
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard 
               title={t.dashboard.stats.totalMessages} 
-              value={summary.totalMessages.toLocaleString()} 
+              value={summary?.totalMessages?.toLocaleString() || '0'} 
               icon={MessageSquare} 
               color="blue"
-              trend={summary.trends.messages}
+              trend={summary?.trends?.messages}
               link="/analytics/messaging"
             />
             <StatCard 
               title={t.dashboard.stats.readRate} 
-              value={`${summary.readRate}%`} 
+              value={`${summary?.readRate || 0}%`} 
               icon={CheckCircle} 
               color="green"
-              trend={summary.trends.read}
+              trend={summary?.trends?.read}
               link="/analytics/messaging"
             />
             <StatCard 
               title={t.dashboard.stats.totalCost} 
-              value={`$${summary.totalCost.toFixed(2)}`} 
+              value={`$${summary?.totalCost?.toFixed(2) || '0.00'}`} 
               icon={DollarSign} 
               color="yellow"
-              trend={-summary.trends.cost}
-              link="/analytics/notifications" 
+              trend={summary?.trends?.cost ? -summary.trends.cost : undefined}
+              link="/analytics/notifications"
             />
             <StatCard 
               title={t.dashboard.stats.failedRate} 
-              value={`${summary.failedRate}%`} 
+              value={`${summary?.failedRate || 0}%`} 
               icon={AlertTriangle} 
               color="red"
               link="/analytics/messaging"

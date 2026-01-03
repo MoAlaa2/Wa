@@ -85,7 +85,7 @@ const ImportPage = () => {
             {history.map(job => (
               <tr key={job.id}>
                 <td className="px-6 py-4 text-sm font-medium text-gray-900">{job.filename}</td>
-                <td className="px-6 py-4 text-sm text-gray-500">{new Date(job.startedAt).toLocaleString()}</td>
+                <td className="px-6 py-4 text-sm text-gray-500">{job.startedAt ? new Date(job.startedAt).toLocaleString() : 'N/A'}</td>
                 <td className="px-6 py-4 text-sm text-gray-500">{job.processed} / {job.total} records</td>
                 <td className="px-6 py-4 text-right">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${

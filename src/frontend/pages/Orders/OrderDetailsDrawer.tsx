@@ -316,7 +316,7 @@ export const OrderDetailsDrawer: React.FC<OrderDetailsDrawerProps> = ({ order, i
                 {order.history.map((entry, idx) => (
                   <div key={idx} className="relative">
                     <div className="absolute -left-[21px] rtl:-right-[21px] rtl:left-auto top-0 w-3 h-3 bg-gray-300 rounded-full border-2 border-white"></div>
-                    <div className="text-xs text-gray-500">{new Date(entry.timestamp).toLocaleString()}</div>
+                    <div className="text-xs text-gray-500">{entry.timestamp ? new Date(entry.timestamp).toLocaleString() : 'N/A'}</div>
                     <div className="text-sm font-medium text-gray-800">
                       <span className="capitalize">{entry.action.replace('_', ' ')}</span> by {entry.userName}
                     </div>
