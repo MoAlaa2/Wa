@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs"]
+
+[phases.install]
+cmds = ["cd src/frontend && npm ci"]
+
+[phases.build]
+cmds = ["cd src/frontend && npm run build"]
+
+[start]
+cmd = "caddy file-server --root src/frontend/dist --listen :$PORT"
